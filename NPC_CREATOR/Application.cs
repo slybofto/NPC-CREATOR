@@ -10,8 +10,25 @@ namespace NPC_CREATOR
         
         static void Main(string[] args)
        {
+            List<NPC> NPClist;
+            string listPath = "npcList.json";
 
-            List<NPC> newNPC = new List<NPC>();       
+            try
+            {
+                //File.ReadAllText(listPath) != null;
+                string listData = File.ReadAllText(listPath);
+
+                NPClist = JsonSerializer.Deserialize<List<NPC>>(listData);
+            }
+            catch
+            {
+                NPClist = new List<NPC>();
+                string jsonString = JsonSerializer.Serialize(NPClist);
+                //string jsonString = File.ReadAllText(listPath);
+                //NPClist = JsonSerializer.Deserialize<List<NPC>>(jsonString);
+                File.WriteAllText(listPath, jsonString);
+
+            }
 
             Console.WriteLine("True or False, Is this npc hostile?");
             bool isHostile = Convert.ToBoolean(Console.ReadLine());
@@ -24,17 +41,6 @@ namespace NPC_CREATOR
 
                 passive.buildDialogue();
 
-                string npcJson;
-
-                npcJson = JsonSerializer.Serialize(passive);
-                Console.WriteLine(npcJson);
-
-                string fileName = "npc.json";
-                string jsonString = JsonSerializer.Serialize(passive);
-                File.WriteAllText(fileName, jsonString);
-
-                Console.WriteLine(File.ReadAllText(fileName));
-                    
             }
 
             else if (isHostile == true)
@@ -46,19 +52,13 @@ namespace NPC_CREATOR
 
                 hostile.buildDialogue();
 
-                JsonSerializer.Serialize(hostile);
-
-                string fileName = "npc.json";
-                string jsonString = File.ReadAllText(fileName);
-                HostileNPC hostile1 = JsonSerializer.Deserialize<HostileNPC>(jsonString);
-
-                Console.WriteLine($"Name: {hostile1.m_Name}");
-                Console.WriteLine($"Speed: {hostile1.m_Speed}");
+                //Console.WriteLine($"Name: {hostile1.m_Name}");
+                //Console.WriteLine($"Speed: {hostile1.m_Speed}");
 
 
             }
-                       
 
+            string jsonNPCSerialize = JsonSerializer.Serialize(NPClist);
             Console.ReadKey();
         }
         
